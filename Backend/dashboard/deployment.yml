@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-api
+  namespace: backend-namespace
+  labels:
+    role: dashboard-api
+    env: production
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      role: dashboard-api
+  template:
+    metadata:
+      labels:
+        role: dashboard-api
+    spec:
+      containers:
+      - name: dashboard-api
+        image: sahildev27/dashboard-api:latest
+        imagePullPolicy: Always
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: dashboard-sec
+                key: db_url
+          - name: PORT
+            value: '4000'
+        ports:
+        - containerPort: 4000

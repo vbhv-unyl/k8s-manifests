@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    global:
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'joshisarthak432@gmail.com'
+      smtp_auth_username: '__SMTP_USERNAME__'
+      smtp_auth_password: '__SMTP_PASSWORD__'
+
+    route:
+      receiver: email-alerts
+
+    receivers:
+      - name: email-alerts
+        email_configs:
+          - to: 'vaibhav.uniyal@optimusinfo.com'
+            send_resolved: true

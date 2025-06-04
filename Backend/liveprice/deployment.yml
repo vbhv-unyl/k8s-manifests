@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: three-tier
+  labels:
+    role: api
+    env: demo
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      role: api
+  template:
+    metadata:
+      labels:
+        role: api
+    spec:
+      containers:
+      - name: api
+        image: vaibhavuoptimus/three-tier-backend:latest
+        imagePullPolicy: Always
+        env:
+          - name: FINNHUB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: livekey-sec
+                key: api_key
+        ports:
+        - containerPort: 7000
